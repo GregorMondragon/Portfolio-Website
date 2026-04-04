@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Send, X, Bot, User } from 'lucide-react';
-import { personal, projects, skills, techStack, stats } from '../../assets/data/portfolio';
+import { personal, projects, skills, techStack, stats, certificates } from '../../assets/data/portfolio';
 import '../../styles/ChatBot.css';
 
 // ── Configuration ─────────────────────────────────────────────
