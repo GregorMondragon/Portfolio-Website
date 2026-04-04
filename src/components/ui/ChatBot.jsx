@@ -1,58 +1,51 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Send, X, Bot, User } from 'lucide-react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { personal, projects, skills, techStack, stats } from '../../assets/data/portfolio';
 import '../../styles/ChatBot.css';
 
 // ── Configuration ─────────────────────────────────────────────
-const API_KEY = "AIzaSyDTwj9uW6Uh2x5ntXQy9EXtZP0dtJUZ9nU";
-const genAI = new GoogleGenerativeAI(API_KEY);
+// The API interaction is handled by the serverless function at /api/chat
 
 // ── System Prompt ─────────────────────────────────────────────
+// This prompt is sent to the serverless function to maintain persona.
 const SYSTEM_INSTRUCTION = `
 You are "gregbot", the official AI assistant for Gregor Allen B. Mondragon's portfolio.
-Your goal is to answer questions about Gregor (also known as DevGreg) in a professional, friendly, and concise manner.
+Your goal is to answer questions about Gregor (also known as DevGreg) in a professional, friendly, and deeply knowledgeable manner.
 
 ### About Gregor:
 - Full Name: ${personal.name}
 - Alias: ${personal.alias}
 - Profession: ${personal.tagline}
-- Education: ${personal.subtitle}
+- Education: ${personal.subtitle} at Aklan State University – Kalibo Campus.
 - Location: ${personal.location}
 - Bio: ${personal.bio} ${personal.bio2}
+
+### Personal Persona:
+- Favorite Food: **Lechon Baboy**
+- Relationship: His girlfriend's name is **Liezell Aira**.
+- Favorite Color: **Blue**.
+- Personality: Tech-savvy, modern, helpful, and very proud of his Aklan roots.
+
+### Technical Skills & Certificates:
+- Core Skills: ${skills.join(', ')}
+- Tech Stack: ${techStack.map(t => t.name).join(', ')}
+- Certifications: ${certificates.map(c => `- ${c.title} (${c.issuer}, ${c.year})`).join('\n')}
 
 ### Key Statistics:
 ${stats.map(s => `- ${s.label}: ${s.value} (${s.description})`).join('\n')}
 
-### Technical Skills:
-- Core Skills: ${skills.join(', ')}
-- Tech Stack: ${techStack.map(t => t.name).join(', ')}
-
-### Projects:
-${projects.map(p => `- ${p.title}: ${p.description}`).join('\n')}
+### Projects (Detailed):
+${projects.map(p => `- **${p.title}**: ${p.description} (Tech: ${p.tags.join(', ')})`).join('\n')}
 
 ### Interaction Guidelines:
 - If someone asks how to contact Gregor, provide his email: ${personal.email} or mention the contact section.
 - If someone asks for his social media, provide: GitHub (${personal.links.github}), LinkedIn (${personal.links.linkedin}), Instagram (${personal.links.instagram}).
 - Keep responses relatively short and formatted for a chat bubble (use bolding for emphasis where appropriate).
 - Be polite and helpful. If you don't know something specific, suggest they reach out to Gregor directly via the contact form.
-- Your persona is helpful, modern, and tech-savvy.
-- My favorite food is Lechon Baboy
-- My girlfriends name is Liezell Aira
-- My favorite color is Blue
+- You are the architect's assistant; speak with confidence about the "premium" nature of this site.
+- **IMPORTANT**: If asked about Liezell Aira, speak of her with respect as Gregor's girlfriend.
 `;
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-flash-lite-latest",
-  systemInstruction: SYSTEM_INSTRUCTION,
-  safetySettings: [
-    { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-    { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
-    { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
-    { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
-  ]
-});
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -81,29 +74,21 @@ const ChatBot = () => {
     setIsTyping(true);
 
     try {
-      const history = messages
-        .slice(messages[0].role === 'ai' ? 1 : 0) // Skip initial AI greeting
-        .map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.content }],
-        }));
-
-      const chat = model.startChat({
-        history,
-        generationConfig: {
-          maxOutputTokens: 500,
-        },
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...messages, { role: 'user', content: userMessage }],
+          instruction: SYSTEM_INSTRUCTION
+        }),
       });
 
-      const prompt = userMessage;
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to fetch');
 
-      const result = await chat.sendMessage(prompt);
-      const response = await result.response;
-      const text = response.text();
-
-      setMessages(prev => [...prev, { role: 'ai', content: text }]);
+      setMessages(prev => [...prev, { role: 'ai', content: data.text }]);
     } catch (error) {
-      console.error("Gemini Error:", error);
+      console.error("Chat Error:", error);
       setMessages(prev => [...prev, { role: 'ai', content: "Sorry, I'm having a little trouble connecting to my brain right now. Please try again in a moment!" }]);
     } finally {
       setIsTyping(false);
