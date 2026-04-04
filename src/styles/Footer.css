@@ -1,0 +1,232 @@
+/* ── Footer ────────────────────────────────────────────── */
+.footer {
+  position: relative;
+  border-top: 1px solid rgba(0, 102, 255, 0.1);
+  padding: 5rem 0 2.5rem 0;
+  background-color: rgba(2, 5, 16, 0.4);
+}
+
+.footer-gradient-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.45), rgba(0, 212, 255, 0.3), transparent);
+}
+
+.footer-container {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+
+@media (max-width: 1024px) {
+  .footer-grid {
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 3rem;
+  }
+}
+
+/* Brand Column */
+.footer-col-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .footer-col-brand {
+    align-items: center;
+  }
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.footer-logo-img {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.footer-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.footer-logo-highlight {
+  color: var(--accent);
+}
+
+.footer-tagline {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.footer-nickname {
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.footer-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.footer-icon-primary {
+  color: var(--accent);
+}
+
+/* Titles */
+.footer-col-title {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+/* Links Column */
+.footer-nav-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.footer-nav-link {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+@media (max-width: 768px) {
+  .footer-nav-link {
+    width: auto;
+  }
+}
+
+.footer-nav-link:hover {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* Social Column */
+.footer-col-social {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .footer-col-social {
+    align-items: center;
+  }
+}
+
+.footer-contact-info {
+  margin-bottom: 1.5rem;
+}
+
+.footer-contact-link {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-contact-link:hover {
+  color: var(--accent);
+}
+
+.footer-social-wrapper {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.footer-social-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.footer-social-btn:hover {
+  background: rgba(0, 102, 255, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 102, 255, 0.2);
+}
+
+/* Bottom Bar */
+.footer-bottom {
+  position: relative;
+}
+
+.footer-bottom-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  margin-bottom: 2rem;
+}
+
+.footer-bottom-content {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+
+.footer-copyright {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.8;
+}
+
+.footer-name-highlight {
+  color: var(--text-primary);
+  font-weight: 500;
+}

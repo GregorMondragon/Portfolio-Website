@@ -1,0 +1,545 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* ── CSS Variables ─────────────────────────────────────── */
+:root {
+  /* Fonts */
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Theme Colors */
+  --primary: #0066FF;
+  --primary-light: #3B8BFF;
+  --primary-dark: #0047CC;
+  --primary-dim: rgba(0, 102, 255, 0.15);
+
+  --accent: #00D4FF;
+  --accent-dim: rgba(0, 212, 255, 0.12);
+  --accent-warm: #0EA5E9;
+
+  /* Backgrounds */
+  --bg-base: #020510;
+  --bg-surface: #040B1A;
+  --bg-card: rgba(0, 102, 255, 0.04);
+
+  /* Borders */
+  --border: rgba(0, 102, 255, 0.15);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Typography Colors */
+  --text-primary: #EEF4FF;
+  --text-muted: rgba(220, 235, 255, 0.75);
+  --text-dim: rgba(130, 170, 255, 0.45);
+}
+
+/* ── Reset & Globals ─────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+  max-width: 100vw;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base Headings - Unified Scale */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* Elegant Semi-bold */
+  line-height: 1.2;
+  color: white;
+}
+
+h1 {
+  font-size: 2.75rem;
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  h2 {
+    font-size: 2.75rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+  }
+}
+
+p {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* ── Custom Cursor ──────────────────────────────────────── */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+  transition: transform 0.08s ease;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(0, 102, 255, 0.5);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transition: transform 0.14s ease, width 0.2s, height 0.2s, border-color 0.2s;
+}
+
+.cursor-ring.hovered {
+  width: 56px;
+  height: 56px;
+  border-color: var(--accent);
+  background: rgba(0, 212, 255, 0.04);
+}
+
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* ── Noise texture ──────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.018;
+  pointer-events: none;
+  z-index: 9990;
+}
+
+/* ── Glow utilities ─────────────────────────────────────── */
+.glow-text-primary {
+  text-shadow:
+    0 0 30px rgba(0, 102, 255, 0.8),
+    0 0 60px rgba(0, 102, 255, 0.4),
+    0 0 120px rgba(0, 102, 255, 0.15);
+}
+
+.glow-text-accent {
+  text-shadow:
+    0 0 30px rgba(0, 212, 255, 0.7),
+    0 0 60px rgba(0, 212, 255, 0.3);
+}
+
+.glow-box-primary {
+  box-shadow:
+    0 0 20px rgba(0, 102, 255, 0.3),
+    0 0 60px rgba(0, 102, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.glow-box-accent {
+  box-shadow:
+    0 0 20px rgba(0, 212, 255, 0.25),
+    0 0 50px rgba(0, 212, 255, 0.08);
+}
+
+/* ── Glass card ─────────────────────────────────────────── */
+.glass-card {
+  background: linear-gradient(135deg, rgba(0, 102, 255, 0.06) 0%, rgba(0, 20, 60, 0.4) 100%);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-card-hover {
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.glass-card-hover:hover {
+  border-color: rgba(0, 102, 255, 0.4);
+  box-shadow: 0 0 30px rgba(0, 102, 255, 0.15), 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Gradient border ────────────────────────────────────── */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* ── Shimmer Button ─────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, #0052CC 50%, #003D99 100%);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: white;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+  background-size: 200% auto;
+  animation: shimmer 2.5s linear infinite;
+  pointer-events: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(0, 102, 255, 0.55), 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes orbMove1 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(70px, -50px) scale(1.08);
+  }
+
+  66% {
+    transform: translate(-35px, 35px) scale(0.96);
+  }
+}
+
+@keyframes orbMove2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(-50px, 70px) scale(1.04);
+  }
+
+  66% {
+    transform: translate(45px, -25px) scale(1.09);
+  }
+}
+
+@keyframes orbMove3 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(-70px, -55px) scale(0.92);
+  }
+}
+
+@keyframes scanLine {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(500%);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Utility Animations */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.animate-orb-1 {
+  animation: orbMove1 14s ease-in-out infinite;
+}
+
+.animate-orb-2 {
+  animation: orbMove2 17s ease-in-out infinite;
+}
+
+.animate-orb-3 {
+  animation: orbMove3 20s ease-in-out infinite;
+}
+
+.animate-scan {
+  animation: scanLine 3s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s linear infinite;
+}
+
+/* ── Section eyebrow ────────────────────────────────────── */
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ── Nav link underline ──────────────────────────────────── */
+.nav-link-hover {
+  position: relative;
+}
+
+.nav-link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.3s ease;
+}
+
+.nav-link-hover:hover::after,
+.nav-link-hover.active::after {
+  width: 100%;
+}
+
+/* ── Intro screen ───────────────────────────────────────── */
+.intro-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-base);
+}
+
+/* ── Grid background pattern ─────────────────────────────── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 102, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 102, 255, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* ── Selection ──────────────────────────────────────────── */
+::selection {
+  background: rgba(0, 102, 255, 0.35);
+  color: white;
+}
+
+/* ── Section Transparency ───────────────────────────────── */
+section,
+header,
+footer,
+main {
+  max-width: 100vw;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Helper Utilities */
+.text-center {
+  text-align: center;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.block {
+  display: block;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}

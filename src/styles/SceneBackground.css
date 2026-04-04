@@ -1,0 +1,106 @@
+/* ── Scene Background (Unified & Continuous) ────────────── */
+.scene-bg-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--bg-base);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 1. Global Fixed Grid Pattern */
+.scene-bg-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* 2. Floating Animated Orbs (Fixed to Viewport) */
+.scene-orb-container {
+  position: absolute;
+  inset: 0;
+}
+
+.scene-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.12;
+  transition: opacity 0.5s ease;
+}
+
+/* Large drifting orbs */
+.scene-orb-1 {
+  width: 700px;
+  height: 700px;
+  top: -15%;
+  left: -5%;
+  background: radial-gradient(circle, #7c3aed 0%, transparent 75%);
+  animation: floatOrb1 25s ease-in-out infinite;
+}
+
+.scene-orb-2 {
+  width: 600px;
+  height: 600px;
+  bottom: -10%;
+  right: -5%;
+  background: radial-gradient(circle, #3b82f6 0%, transparent 75%);
+  animation: floatOrb2 30s ease-in-out infinite;
+}
+
+.scene-orb-3 {
+  width: 500px;
+  height: 500px;
+  top: 40%;
+  right: 15%;
+  background: radial-gradient(circle, #8b5cf6 0%, transparent 75%);
+  animation: floatOrb3 22s ease-in-out infinite;
+}
+
+.scene-orb-4 {
+  width: 450px;
+  height: 450px;
+  bottom: 25%;
+  left: 10%;
+  background: radial-gradient(circle, #2563eb 0%, transparent 75%);
+  animation: floatOrb1 28s ease-in-out reverse infinite;
+}
+
+.scene-orb-5 {
+  width: 400px;
+  height: 400px;
+  top: 10%;
+  right: 35%;
+  background: radial-gradient(circle, #6366f1 0%, transparent 75%);
+  animation: floatOrb2 20s ease-in-out reverse infinite;
+}
+
+/* 3. Subtle Vignette/Atmosphere Overlay */
+.scene-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(2, 5, 16, 0.4) 100%);
+  pointer-events: none;
+}
+
+/* Orbital Drifts */
+@keyframes floatOrb1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(120px, -60px) scale(1.15); }
+  66%      { transform: translate(-80px, 90px) scale(0.9); }
+}
+
+@keyframes floatOrb2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-100px, 110px) scale(1.12); }
+}
+
+@keyframes floatOrb3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(80px, 120px) scale(1.08); }
+  80%      { transform: translate(-120px, -70px) scale(0.95); }
+}
