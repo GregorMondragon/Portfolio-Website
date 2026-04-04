@@ -86,7 +86,7 @@ const ChatBot = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to fetch');
 
-      setMessages(prev => [...prev, { role: 'ai', content: data.text }]);
+      setMessages(prev => [...prev, { role: 'ai', content: data.text || "I'm sorry, I couldn't generate a response. Please try again!" }]);
     } catch (error) {
       console.error("Chat Error:", error);
       setMessages(prev => [...prev, { role: 'ai', content: "Sorry, I'm having a little trouble connecting to my brain right now. Please try again in a moment!" }]);
