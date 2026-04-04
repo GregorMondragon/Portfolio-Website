@@ -1,28 +1,29 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Note: Use 'GEMINI_API_KEY' for Vercel, not 'VITE_GEMINI_API_KEY' on the backend.
+// Native Gemini API Key from Vercel Environment Variables
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-export default async function handler(req, res) {
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  const { messages, instruction } = req.body;
-
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: 'Invalid messages format' });
+export default async function handler(request) {
+  // 1. Method check
+  if (request.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
   try {
+    // 2. Parse the request body using standard JSON()
+    const { messages, instruction } = await request.json();
+
+    if (!messages || !Array.isArray(messages)) {
+      return Response.json({ error: 'Invalid messages format' }, { status: 400 });
+    }
+
+    // 3. Setup Gemini Model
     const model = genAI.getGenerativeModel({
       model: "gemini-flash-lite-latest",
       systemInstruction: instruction,
     });
 
-    // Prepare history (Gemini requires starting with a user message)
-    // We slice from the first user message
+    // 4. Prepare conversation history
     const firstUserIndex = messages.findIndex(m => m.role === 'user');
     const conversationHistory = firstUserIndex !== -1 
       ? messages.slice(firstUserIndex, -1).map(m => ({
@@ -33,20 +34,19 @@ export default async function handler(req, res) {
 
     const chat = model.startChat({
       history: conversationHistory,
-      generationConfig: {
-        maxOutputTokens: 500,
-      },
+      generationConfig: { maxOutputTokens: 500 },
     });
 
-    // The prompt is the very last user message
+    // 5. Send message and get response
     const prompt = messages[messages.length - 1].content;
     const result = await chat.sendMessage(prompt);
     const response = await result.response;
     const text = response.text();
 
-    return res.status(200).json({ text });
+    // 6. Return response using standard Response.json()
+    return Response.json({ text });
   } catch (error) {
-    console.error("Gemini Backend Error:", error);
-    return res.status(500).json({ error: 'Failed to generate response' });
+    console.error("Gemini Native Error:", error);
+    return Response.json({ error: 'Failed to generate response' }, { status: 500 });
   }
 }
