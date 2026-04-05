@@ -101,7 +101,7 @@ export const projects = [
     description: "A dynamic weather visualization tool utilizing real-time API data to provide interactive global weather patterns and forecasts.",
     extendedDescription: "A comprehensive weather dashboard that visualizes global atmospheric data in real-time. It integrates multiple API layers to show temperature heatmaps, wind vectors, and severe weather alerts with a dark-mode optimized GIS interface.",
     tags: ["API", "Geography", "Real-time"],
-    image: "public/images/showcase/weather.png",
+    image: "/Images/WeatherMap.png",
     liveUrl: "#",
     detailUrl: "#",
     status: "Developing",
