@@ -4,6 +4,7 @@ import { Code2, Award, Layers, ExternalLink, ArrowRight, X } from 'lucide-react'
 import { projects, certificates, techStack } from '../../assets/data/portfolio';
 import SectionTitle from '../ui/SectionTitle';
 import { staggerContainer, useFluidParallax, zoomIn, slideInDown } from '../../utils/animations';
+import { useMobile } from '../../hooks';
 import '../../styles/Portfolio.css';
 
 const TABS = [
@@ -38,7 +39,7 @@ const ProjectModal = ({ project, onClose }) => {
 
         <div className="project-modal-layout elitist-layout">
           {/* Elite Intro Bar */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -55,7 +56,7 @@ const ProjectModal = ({ project, onClose }) => {
           </motion.div>
 
           {/* Elite Title */}
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -66,7 +67,7 @@ const ProjectModal = ({ project, onClose }) => {
           </motion.h2>
 
           {/* Elite Hero Gallery */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.98, y: 40 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -85,7 +86,7 @@ const ProjectModal = ({ project, onClose }) => {
           </motion.div>
 
           {/* Elite Technical Narrative / Details Section */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -98,7 +99,7 @@ const ProjectModal = ({ project, onClose }) => {
                 <p className="narrative-desc-lead">{project.description}</p>
                 <p className="narrative-desc-full">{project.extendedDescription}</p>
               </div>
-              
+
               <div className="narrative-specs-col">
                 <div className="specs-elite-grid">
                   <div className="elite-spec">
@@ -137,26 +138,38 @@ const ProjectModal = ({ project, onClose }) => {
 // ── Project Card ─────────────────────────────────────────────
 const ProjectCard = ({ project, index, onOpen }) => {
   const cardRef = useRef(null);
+  const isMobile = useMobile();
+  
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ["start end", "end start"]
   });
 
-  const stickyY = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const parallaxRange = isMobile ? 10 : 40;
+  const stickyY = useTransform(scrollYProgress, [0, 1], [parallaxRange, -parallaxRange]);
   const smoothStickyY = useSpring(stickyY, { stiffness: 100, damping: 20 });
+
+  const entranceVariants = isMobile ? {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+    }
+  } : {
+    hidden: { opacity: 0, y: 100, rotateY: 15 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      rotateY: 0,
+      transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }
+    }
+  };
 
   return (
     <motion.div
       ref={cardRef}
-      variants={{
-        hidden: { opacity: 0, y: 100, rotateY: 15 },
-        visible: { 
-          opacity: 1, 
-          y: 0, 
-          rotateY: 0,
-          transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }
-        }
-      }}
+      variants={entranceVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: false, amount: 0.1 }}
@@ -175,7 +188,7 @@ const ProjectCard = ({ project, index, onOpen }) => {
           }}
         />
         <img src={project.image} alt={project.title} className="project-card-preview-img" />
-        
+
         {/* Status Badge */}
         <div className="project-status-badges">
           <span className={`project-status-badge status-${project.status.toLowerCase()}`}>
@@ -223,25 +236,36 @@ const ProjectCard = ({ project, index, onOpen }) => {
 // ── Certificate Card ─────────────────────────────────────────
 const CertCard = ({ cert, index }) => {
   const certRef = useRef(null);
+  const isMobile = useMobile();
+  
   const { scrollYProgress } = useScroll({
     target: certRef,
     offset: ["start end", "end start"]
   });
 
-  const stickyY = useTransform(scrollYProgress, [0, 1], [25, -25]);
+  const parallaxRange = isMobile ? 8 : 25;
+  const stickyY = useTransform(scrollYProgress, [0, 1], [parallaxRange, -parallaxRange]);
   const smoothStickyY = useSpring(stickyY, { stiffness: 100, damping: 25 });
 
+  const entranceVariants = isMobile ? {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.7, ease: "easeOut" } 
+    }
+  } : {
+    hidden: { opacity: 0, x: index % 2 === 0 ? -50 : 50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 1, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }
+    }
+  };
   return (
     <motion.div
       ref={certRef}
-      variants={{
-        hidden: { opacity: 0, x: index % 2 === 0 ? -50 : 50 },
-        visible: { 
-          opacity: 1, 
-          x: 0,
-          transition: { duration: 1, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }
-        }
-      }}
+      variants={entranceVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: false, amount: 0.1 }}
@@ -266,12 +290,16 @@ const CertCard = ({ cert, index }) => {
 // ── Tech Card ────────────────────────────────────────────────
 const TechCard = ({ tech, index }) => {
   const techRef = useRef(null);
+  const isMobile = useMobile();
+  
   const { scrollYProgress } = useScroll({
     target: techRef,
     offset: ["start end", "end start"]
   });
 
-  const stickyY = useTransform(scrollYProgress, [0, 1], [15, -15]);
+  // Performance: Disable parallax calculation for tech icons on mobile
+  const parallaxRange = isMobile ? 0 : 15;
+  const stickyY = useTransform(scrollYProgress, [0, 1], [parallaxRange, -parallaxRange]);
   const smoothStickyY = useSpring(stickyY, { stiffness: 120, damping: 30 });
 
   return (
@@ -306,7 +334,7 @@ const Portfolio = () => {
   const [activeTab, setActiveTab] = useState('projects');
   const [activeProject, setActiveProject] = useState(null);
   const sectionRef = useRef(null);
-  
+
   const { y: containerY, scale } = useFluidParallax(sectionRef, {
     offset: ["start start", "end start"],
     yRange: [0, 100],
@@ -417,9 +445,9 @@ const Portfolio = () => {
       {/* Project Expansion Modal */}
       <AnimatePresence>
         {activeProject && (
-          <ProjectModal 
-            project={activeProject} 
-            onClose={() => setActiveProject(null)} 
+          <ProjectModal
+            project={activeProject}
+            onClose={() => setActiveProject(null)}
           />
         )}
       </AnimatePresence>

@@ -44,7 +44,7 @@
 
 /* ── Section Title Component ──────────────────────────────── */
 .section-title-wrapper {
-  margin-bottom: 4rem;
+  margin-bottom: 2.5rem;
   position: relative;
 }
 
@@ -136,9 +136,18 @@
   pointer-events: none;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .section-subtitle {
     font-size: 1.0625rem;
+  }
+  
+  .section-title-wrapper {
+    padding: 0 1.5rem;
+  }
+
+  .section-heading {
+    white-space: normal;
+    font-size: 2rem;
   }
 }
 

@@ -2,8 +2,9 @@ import { useRef } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { academic } from '../../assets/data/portfolio';
 import SectionTitle from '../ui/SectionTitle';
-import { Code2, Database, Layers, Activity, GraduationCap } from 'lucide-react';
+import { Code2, Database, Layers, Activity, Award } from 'lucide-react';
 import { fadeUp, staggerContainer, zoomIn, useFluidParallax } from '../../utils/animations';
+import { useMobile } from '../../hooks';
 import '../../styles/AcademicFoundation.css';
 
 const iconMap = {
@@ -13,10 +14,11 @@ const iconMap = {
   activity: Activity,
 };
 
-const TimelineItem = ({ item, index, containerScroll }) => {
+const TimelineItem = ({ item, index }) => {
   const itemRef = useRef(null);
-  const Icon = iconMap[item.icon] || GraduationCap;
+  const Icon = iconMap[item.icon] || Award;
   const isRight = index % 2 !== 0;
+  const isMobile = useMobile();
 
   // Individual scroll-based sticky effect
   const { scrollYProgress } = useScroll({
@@ -24,9 +26,36 @@ const TimelineItem = ({ item, index, containerScroll }) => {
     offset: ["start end", "end start"]
   });
 
-  // Sticky-feel vertical offset: moves slightly slower/faster than scroll
-  const stickyY = useTransform(scrollYProgress, [0, 1], [30, -30]);
+  // Tame the parallax for mobile
+  const parallaxValue = isMobile ? 15 : 30;
+  const stickyY = useTransform(scrollYProgress, [0, 1], [parallaxValue, -parallaxValue]);
   const smoothStickyY = useSpring(stickyY, { stiffness: 100, damping: 20 });
+
+  // Simplified entrance variants for mobile
+  const cardVariants = isMobile ? {
+    hidden: { opacity: 0, y: 40 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.8, ease: "easeOut" } 
+    }
+  } : (isRight ? {
+    hidden: { opacity: 0, x: 100, rotateY: 20 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      rotateY: 0,
+      transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
+    }
+  } : {
+    hidden: { opacity: 0, x: -100, rotateY: -20 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      rotateY: 0,
+      transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
+    }
+  });
 
   return (
     <motion.div
@@ -54,23 +83,7 @@ const TimelineItem = ({ item, index, containerScroll }) => {
 
       <motion.div 
         className="timeline-content-card shadow-premium"
-        variants={isRight ? {
-          hidden: { opacity: 0, x: 100, rotateY: 20 },
-          visible: { 
-            opacity: 1, 
-            x: 0, 
-            rotateY: 0,
-            transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
-          }
-        } : {
-          hidden: { opacity: 0, x: -100, rotateY: -20 },
-          visible: { 
-            opacity: 1, 
-            x: 0, 
-            rotateY: 0,
-            transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
-          }
-        }}
+        variants={cardVariants}
       >
         <div className="timeline-header">
           <motion.div 

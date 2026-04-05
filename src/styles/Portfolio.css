@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 5rem;
+  margin-bottom: 3.5rem;
   width: 100%;
 }
 
@@ -76,8 +76,8 @@
 .tech-stack-organized {
   display: flex;
   flex-direction: column;
-  gap: 5.5rem;
-  max-width: 70rem;
+  gap: 3.5rem;
+  max-width: 75rem;
   margin: 0 auto;
 }
 
@@ -112,16 +112,10 @@
 }
 
 .portfolio-tech-grid-elite {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-  justify-items: center;
-}
-
-@media (min-width: 1024px) {
-  .portfolio-tech-grid-elite {
-    grid-template-columns: repeat(6, 1fr);
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 @media (max-width: 640px) {
@@ -746,6 +740,8 @@
   align-items: center;
   gap: 0.75rem;
   cursor: default;
+  width: 8.5rem;
+  flex-shrink: 0;
 }
 
 .tech-card-icon-wrapper {
