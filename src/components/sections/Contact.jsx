@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Mail, MapPin, Send, Loader2, CheckCircle2 } from 'lucide-react';
 import { personal } from '../../assets/data/portfolio';
-import GlowOrbs from '../ui/GlowOrbs';
 import SectionTitle from '../ui/SectionTitle';
 import { slideInLeft, slideInRight, useFluidParallax, staggerContainer, fadeUp } from '../../utils/animations';
 import '../../styles/Contact.css';
@@ -23,14 +22,25 @@ const InstagramIcon = () => (
     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
   </svg>
 );
+const FacebookIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+  </svg>
+);
+const TelegramIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zM17.65 8.232l-1.933 9.112c-.145.64-.523.798-1.06.498L11.7 15.58l-1.42 1.368c-.157.157-.289.289-.59.289l.21-2.981L15.33 9.531c.236-.21-.051-.327-.367-.116l-6.71 4.225-2.89-.904c-.628-.196-.64-.628.13-.928l11.31-4.359c.523-.196.981.116.847.783z" />
+  </svg>
+);
 
 const socialLinks = [
   { Icon: GithubIcon, href: personal.links.github, label: 'GitHub' },
   { Icon: LinkedinIcon, href: personal.links.linkedin, label: 'LinkedIn' },
+  { Icon: FacebookIcon, href: personal.links.facebook, label: 'Facebook' },
   { Icon: InstagramIcon, href: personal.links.instagram, label: 'Instagram' },
+  { Icon: TelegramIcon, href: personal.links.telegram, label: 'Telegram' },
 ];
 
-// ── Contact ──────────────────────────────────────────────────
 const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState('idle');
@@ -40,36 +50,79 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('sending');
-    await new Promise((r) => setTimeout(r, 1800));
-    setStatus('sent');
-    setTimeout(() => { setStatus('idle'); setForm({ name: '', email: '', subject: '', message: '' }); }, 3000);
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${personal.email}`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          ...form,
+          _subject: `New Portfolio Message: ${form.subject || 'Inquiry'}`,
+          _captcha: "false" // Set to "true" after first verification for spam protection
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success === "true" || data.success === true) {
+        setStatus('sent');
+        setTimeout(() => { 
+          setStatus('idle'); 
+          setForm({ name: '', email: '', subject: '', message: '' }); 
+        }, 3000);
+      } else {
+        throw new Error("FormSubmit Error");
+      }
+    } catch (error) {
+      console.error("Form Error:", error);
+      alert("Submission failed. This often happens on the first try if your email isn't yet verified with FormSubmit. Check your inbox to confirm!");
+      setStatus('idle');
+    }
   };
 
   const sectionRef = useRef(null);
-  const { y, scale } = useFluidParallax(sectionRef, {
+  const leftColRef = useRef(null);
+  const formRef = useRef(null);
+
+  // Section-wide parallax shrink
+  const { y: containerY, scale } = useFluidParallax(sectionRef, {
     offset: ["start start", "end start"],
-    yRange: [0, 80],
-    scaleRange: [1, 0.95]
+    yRange: [0, 100],
+    scaleRange: [1, 0.92]
   });
+
+  // Sticky effect for left column components
+  const { scrollYProgress: leftScroll } = useScroll({ target: leftColRef, offset: ["start end", "end start"] });
+  const leftStickyY = useTransform(leftScroll, [0, 1], [40, -40]);
+  const leftSmoothStickyY = useSpring(leftStickyY, { stiffness: 100, damping: 20 });
+
+  // Sticky effect for form fields (staggered stack)
+  const { scrollYProgress: formScroll } = useScroll({ target: formRef, offset: ["start end", "end start"] });
+  const formStickyY = useTransform(formScroll, [0, 1], [30, -30]);
+  const formSmoothStickyY = useSpring(formStickyY, { stiffness: 100, damping: 20 });
 
   return (
     <section id="contact" className="contact-section" ref={sectionRef}>
-      <motion.div className="contact-container" style={{ y, scale }}>
+      <motion.div className="contact-container" style={{ y: containerY, scale }}>
         <SectionTitle
           title="Contact"
           highlight="Me"
           subtitle="Have a project in mind or just want to say hi? My inbox is always open."
+          center
+          withGlow
         />
 
         <div className="contact-grid">
-
           {/* ── Left ── */}
           <motion.div
+            ref={leftColRef}
             variants={slideInLeft}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.2 }}
-            custom={0}
+            style={{ y: leftSmoothStickyY }}
             className="contact-left-col"
           >
             <div>
@@ -79,9 +132,9 @@ const Contact = () => {
               </p>
             </div>
 
-            {/* Contact info */}
+            {/* Contact info info list */}
             <div className="contact-info-list">
-              <div className="contact-info-item">
+              <motion.div whileHover={{ x: 5 }} className="contact-info-item">
                 <div className="contact-info-icon email">
                   <Mail size={15} color="var(--accent)" />
                 </div>
@@ -89,8 +142,8 @@ const Contact = () => {
                   <p className="contact-info-label">Email</p>
                   <a href={`mailto:${personal.email}`} className="contact-info-value">{personal.email}</a>
                 </div>
-              </div>
-              <div className="contact-info-item">
+              </motion.div>
+              <motion.div whileHover={{ x: 5 }} className="contact-info-item">
                 <div className="contact-info-icon location">
                   <MapPin size={15} color="var(--accent)" />
                 </div>
@@ -98,10 +151,10 @@ const Contact = () => {
                   <p className="contact-info-label">Location</p>
                   <p className="contact-info-value">{personal.location}</p>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            {/* Socials */}
+            {/* Socials socials list */}
             <div>
               <p className="contact-social-label">Find me on</p>
               <div className="contact-social-list">
@@ -111,7 +164,7 @@ const Contact = () => {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.15, y: -3 }}
+                    whileHover={{ scale: 1.15, y: -5, color: "var(--accent)" }}
                     whileTap={{ scale: 0.9 }}
                     aria-label={label}
                     className="contact-social-link"
@@ -122,9 +175,9 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Availability card */}
+            {/* Availability card details */}
             <motion.div
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ y: -5, scale: 1.02 }}
               className="contact-avail-card"
             >
               <div className="contact-avail-header">
@@ -137,13 +190,14 @@ const Contact = () => {
             </motion.div>
           </motion.div>
 
-          {/* ── Right form ── */}
+          {/* ── Right form col ── */}
           <motion.div
+            ref={formRef}
             variants={slideInRight}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.2 }}
-            custom={0}
+            style={{ y: formSmoothStickyY }}
             className="contact-form-col"
           >
             <motion.form
@@ -151,7 +205,7 @@ const Contact = () => {
               onSubmit={handleSubmit} className="contact-form"
             >
               <div className="contact-form-row">
-                <motion.div variants={fadeUp}>
+                <motion.div variants={fadeUp} custom={0.1} className="contact-input-group">
                   <label className="contact-input-label">Your Name</label>
                   <input
                     className="contact-input"
@@ -159,7 +213,7 @@ const Contact = () => {
                     value={form.name} onChange={handleChange} required
                   />
                 </motion.div>
-                <motion.div variants={fadeUp}>
+                <motion.div variants={fadeUp} custom={0.2} className="contact-input-group">
                   <label className="contact-input-label">Email Address</label>
                   <input
                     className="contact-input"
@@ -168,7 +222,7 @@ const Contact = () => {
                   />
                 </motion.div>
               </div>
-              <motion.div variants={fadeUp}>
+              <motion.div variants={fadeUp} custom={0.3} className="contact-input-group">
                 <label className="contact-input-label">Subject</label>
                 <input
                   className="contact-input"
@@ -176,7 +230,7 @@ const Contact = () => {
                   value={form.subject} onChange={handleChange}
                 />
               </motion.div>
-              <motion.div variants={fadeUp}>
+              <motion.div variants={fadeUp} custom={0.4} className="contact-input-group">
                 <label className="contact-input-label">Message</label>
                 <textarea
                   className="contact-input contact-textarea"
@@ -186,9 +240,10 @@ const Contact = () => {
               </motion.div>
               <motion.button
                 variants={fadeUp}
+                custom={0.5}
                 type="submit"
                 disabled={status !== 'idle'}
-                whileHover={status === 'idle' ? { scale: 1.02 } : {}}
+                whileHover={status === 'idle' ? { scale: 1.02, y: -2 } : {}}
                 whileTap={status === 'idle' ? { scale: 0.98 } : {}}
                 className="contact-submit-btn"
                 style={{
@@ -196,7 +251,7 @@ const Contact = () => {
                     ? 'linear-gradient(135deg, #059669, #047857)'
                     : 'linear-gradient(135deg, var(--primary) 0%, #0052CC 50%, #003D99 100%)',
                   opacity: status === 'sending' ? 0.8 : 1,
-                  boxShadow: status === 'idle' ? '0 0 30px rgba(0,102,255,0.3)' : 'none',
+                  boxShadow: status === 'idle' ? '0 10px 30px rgba(0,102,255,0.25)' : 'none',
                 }}
               >
                 {status === 'idle' && <><Send size={15} /> Send Message</>}

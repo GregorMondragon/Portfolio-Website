@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useActiveSection } from '../../hooks';
 import { navLinks, personal } from '../../assets/data/portfolio';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sparkles } from 'lucide-react';
 import '../../styles/Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ onChatToggle }) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const activeSection = useActiveSection(['home', 'about', 'portfolio', 'contact']);
@@ -85,6 +85,34 @@ const Navbar = () => {
 
           {/* Right Section */}
           <div className="navbar-actions">
+            {/* AI Assistant Wrapper (Synchronized Hover) */}
+            <motion.div
+              initial="initial"
+              whileHover="hover"
+              className="navbar-ai-wrapper"
+            >
+              <motion.span 
+                variants={{
+                  initial: { x: 20, opacity: 0 },
+                  hover: { x: 0, opacity: 1 }
+                }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="ai-btn-text"
+              >
+                gregbot
+              </motion.span>
+              
+              <motion.button
+                onClick={onChatToggle}
+                whileTap={{ scale: 0.9 }}
+                className="navbar-ai-icon-btn"
+                aria-label="Toggle gregbot AI"
+              >
+                <Sparkles size={16} className="ai-sparkle-icon" />
+                <div className="ai-icon-glow" />
+              </motion.button>
+            </motion.div>
+
             {/* CTA */}
             <motion.a
               href={`mailto:${personal.email}`}
@@ -154,6 +182,22 @@ const Navbar = () => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 10, opacity: 0 }}
                 transition={{ delay: 0.3, duration: 0.4 }}
+                className="mobile-menu-ai-wrapper"
+              >
+                <button
+                  onClick={() => { setMenuOpen(false); onChatToggle(); }}
+                  className="mobile-menu-ai-btn"
+                >
+                  <Sparkles size={18} />
+                  <span>Talk to AI Assistant</span>
+                </button>
+              </motion.div>
+
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 10, opacity: 0 }}
+                transition={{ delay: 0.4, duration: 0.4 }}
                 className="mobile-menu-cta-wrapper"
               >
                 <a href={`mailto:${personal.email}`} className="mobile-menu-cta group">

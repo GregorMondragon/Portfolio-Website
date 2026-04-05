@@ -9,17 +9,19 @@ import Footer from './components/layout/Footer';
 import IntroScreen from './components/sections/IntroScreen';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
+import AcademicFoundation from './components/sections/AcademicFoundation';
 import Portfolio from './components/sections/Portfolio';
 import Contact from './components/sections/Contact';
 import SceneBackground from './components/ui/SceneBackground';
+
 // UI
 import CustomCursor from './components/ui/CustomCursor';
 import ScrollProgress from './components/ui/ScrollProgress';
-import ScrollToTop from './components/ui/ScrollToTop';
 import ChatBot from './components/ui/ChatBot';
 
 const App = () => {
   const [introComplete, setIntroComplete] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <>
@@ -40,16 +42,16 @@ const App = () => {
       {introComplete && (
         <>
           <SceneBackground />
-          <Navbar />
+          <Navbar onChatToggle={() => setIsChatOpen(true)} />
           <main>
             <Hero />
             <About />
+            <AcademicFoundation />
             <Portfolio />
             <Contact />
           </main>
           <Footer />
-          <ScrollToTop />
-          <ChatBot />
+          <ChatBot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
         </>
       )}
     </>

@@ -61,7 +61,6 @@ const About = () => {
         <SectionTitle
           title="About Me"
           subtitle="Transforming ideas into digital experiences"
-          withSparkles
           withGlow
           center
         />

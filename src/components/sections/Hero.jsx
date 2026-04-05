@@ -61,10 +61,24 @@ const InstagramIcon = () => (
   </svg>
 );
 
+const FacebookIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+  </svg>
+);
+
+const TelegramIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zM17.65 8.232l-1.933 9.112c-.145.64-.523.798-1.06.498L11.7 15.58l-1.42 1.368c-.157.157-.289.289-.59.289l.21-2.981L15.33 9.531c.236-.21-.051-.327-.367-.116l-6.71 4.225-2.89-.904c-.628-.196-.64-.628.13-.928l11.31-4.359c.523-.196.981.116.847.783z" />
+  </svg>
+);
+
 const socialLinks = [
   { Icon: GithubIcon, href: personal.links.github, label: 'GitHub' },
   { Icon: LinkedinIcon, href: personal.links.linkedin, label: 'LinkedIn' },
+  { Icon: FacebookIcon, href: personal.links.facebook, label: 'Facebook' },
   { Icon: InstagramIcon, href: personal.links.instagram, label: 'Instagram' },
+  { Icon: TelegramIcon, href: personal.links.telegram, label: 'Telegram' },
 ];
 
 // ── 3D Code Panel ──────────────────────────────────────────────
@@ -126,9 +140,9 @@ const CodePanel = () => {
 
           <div className="hero-code-panel-line-indent" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
             <span style={{ color: '#93c5fd', marginTop: '0.25rem' }}>skills</span><span style={{ color: 'rgba(255,255,255,0.5)', marginTop: '0.25rem' }}>: [</span>
-            {skills.slice(0, 4).map((s, i) => (
+            {skills.map((s, i) => (
               <span key={s} className="hero-code-panel-skill-badge">
-                "{s}"{i < 3 ? ',' : ''}
+                "{s}"{i < skills.length - 1 ? ',' : ''}
               </span>
             ))}
             <span style={{ color: 'rgba(255,255,255,0.5)', marginTop: '0.25rem' }}>],</span>
@@ -280,7 +294,7 @@ const Hero = () => {
               variants={slowFadeUp}
               className="hero-bio"
             >
-              {personal.bio}
+              I am <strong className="text-white-bold">Gregor Allen B. Mondragon</strong>, a Software Engineer dedicated to architecting high-performance web solutions and premium digital experiences. I specialize in bridging complex technical requirements with elite UI/UX design, offering scalable full-stack development that exceeds expectations and delivers high-impact results.
             </motion.p>
 
             {/* Call to Actions */}

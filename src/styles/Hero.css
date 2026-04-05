@@ -24,11 +24,20 @@
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
-  display: none;
+  display: block; /* Visible by default on all screens */
 }
-@media (min-width: 1024px) {
+
+@media (max-width: 1023px) {
   .hero-code-panel-wrapper {
-    display: block;
+    max-width: 100%;
+    margin-top: 2rem;
+  }
+  .hero-code-panel-content {
+    padding: 1.25rem;
+    font-size: 0.75rem;
+  }
+  .hero-code-panel-title {
+    font-size: 0.65rem;
   }
 }
 
@@ -202,6 +211,24 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+  .hero-btn-primary, .hero-btn-secondary {
+    width: 100%;
+    padding: 1rem 1.5rem;
+  }
+  .hero-section {
+    padding-bottom: 6rem;
+  }
+  .hero-socials {
+    margin-top: 2.5rem;
+  }
 }
 
 .hero-btn-primary {

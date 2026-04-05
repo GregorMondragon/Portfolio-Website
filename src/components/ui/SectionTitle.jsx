@@ -2,8 +2,6 @@ import { motion } from 'framer-motion';
 import { fadeUp } from '../../utils/animations';
 import '../../styles/UI.css';
 
-import { Sparkles } from 'lucide-react';
-
 const SectionTitle = ({ 
   eyebrow, 
   title, 
@@ -11,7 +9,6 @@ const SectionTitle = ({
   subtitle, 
   center = true, 
   compact = false,
-  withSparkles = false,
   withGlow = false 
 }) => {
   return (
@@ -73,9 +70,7 @@ const SectionTitle = ({
           custom={0.4}
         >
           <span className="section-subtitle-content">
-            {withSparkles && <Sparkles size={16} className="text-accent opacity-60" style={{ color: 'var(--accent)' }} />}
             {subtitle}
-            {withSparkles && <Sparkles size={16} className="text-accent opacity-60" style={{ color: 'var(--accent)' }} />}
           </span>
         </motion.p>
       )}

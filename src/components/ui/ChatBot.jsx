@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Send, X, Bot, User } from 'lucide-react';
+import { Send, X, Bot } from 'lucide-react';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { personal, projects, skills, techStack, stats, certificates } from '../../assets/data/portfolio';
 import '../../styles/ChatBot.css';
 
 // ── Configuration ─────────────────────────────────────────────
-// The API interaction is handled by the serverless function at /api/chat
+const genAI = new GoogleGenerativeAI(personal.geminiKey);
 
 // ── System Prompt ─────────────────────────────────────────────
-// This prompt is sent to the serverless function to maintain persona.
 const SYSTEM_INSTRUCTION = `
 You are "gregbot", the official AI assistant for Gregor Allen B. Mondragon's portfolio.
 Your goal is to answer questions about Gregor (also known as DevGreg) in a professional, friendly, and deeply knowledgeable manner.
@@ -29,7 +29,7 @@ Your goal is to answer questions about Gregor (also known as DevGreg) in a profe
 
 ### Technical Skills & Certificates:
 - Core Skills: ${skills.join(', ')}
-- Tech Stack: ${techStack.map(t => t.name).join(', ')}
+- Tech Stack: ${techStack.flatMap(group => group.techs.map(t => t.name)).join(', ')}
 - Certifications: ${certificates.map(c => `- ${c.title} (${c.issuer}, ${c.year})`).join('\n')}
 
 ### Key Statistics:
@@ -43,17 +43,15 @@ ${projects.map(p => `- **${p.title}**: ${p.description} (Tech: ${p.tags.join(', 
 - If someone asks for his social media, provide: GitHub (${personal.links.github}), LinkedIn (${personal.links.linkedin}), Instagram (${personal.links.instagram}).
 - Keep responses relatively short and formatted for a chat bubble (use bolding for emphasis where appropriate).
 - Be polite and helpful. If you don't know something specific, suggest they reach out to Gregor directly via the contact form.
-- You are the architect's assistant; speak with confidence about the "premium" nature of this site.
-- **IMPORTANT**: If asked about Liezell Aira, speak of her with respect as Gregor's girlfriend.
 `;
 
-const ChatBot = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const ChatBot = ({ isOpen, onClose }) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
     { role: 'ai', content: `Hi! I'm **gregbot**. I can tell you all about Gregor's work, skills, and projects. What would you like to know?` }
   ]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -63,6 +61,15 @@ const ChatBot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -74,74 +81,74 @@ const ChatBot = () => {
     setIsTyping(true);
 
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [...messages, { role: 'user', content: userMessage }],
-          instruction: SYSTEM_INSTRUCTION
-        }),
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-flash-lite-latest", 
+        systemInstruction: SYSTEM_INSTRUCTION 
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to fetch');
+      const firstUserIndex = messages.findIndex(m => m.role === 'user');
+      const chatHistory = firstUserIndex !== -1 
+        ? messages.slice(firstUserIndex).map(m => ({
+            role: m.role === 'user' ? 'user' : 'model',
+            parts: [{ text: m.content }],
+          }))
+        : [];
 
-      setMessages(prev => [...prev, { role: 'ai', content: data.text || "I'm sorry, I couldn't generate a response. Please try again!" }]);
+      const chat = model.startChat({
+        history: chatHistory,
+        generationConfig: { maxOutputTokens: 500 },
+      });
+
+      const result = await chat.sendMessage(userMessage);
+      const response = await result.response;
+      const text = response.text();
+
+      setMessages(prev => [...prev, { role: 'ai', content: text || "I'm sorry, I couldn't generate a response. Please try again!" }]);
     } catch (error) {
       console.error("Chat Error:", error);
-      setMessages(prev => [...prev, { role: 'ai', content: "Sorry, I'm having a little trouble connecting to my brain right now. Please try again in a moment!" }]);
+      setIsOffline(true);
+      setMessages(prev => [...prev, { 
+        role: 'ai', 
+        content: "I'm having some trouble connecting to my services. I'll be **offline** for a bit while Gregor fixes things. Sorry for the inconvenience!" 
+      }]);
     } finally {
       setIsTyping(false);
     }
   };
 
   return (
-    <div className="chatbot-wrapper">
-      {/* Toggle Button */}
-      <motion.button
-        className={`chatbot-toggle ${isOpen ? 'chatbot-toggle-active' : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        aria-label="Toggle AI Assistant"
-      >
-        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
-      </motion.button>
-
-      {/* Chat Window */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className="chatbot-window"
-            initial={{ opacity: 0, scale: 0.8, y: 20, x: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20, x: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          >
-            {/* Header */}
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="chatbot-panel-elite"
+          initial={{ x: 450, opacity: 0, scale: 0.95 }}
+          animate={{ x: 0, opacity: 1, scale: 1 }}
+          exit={{ x: 450, opacity: 0, scale: 0.95 }}
+          transition={{ type: "spring", damping: 30, stiffness: 350, mass: 0.8 }}
+        >
+          {/* Main Chat Perspective Window */}
+          <div className="chatbot-window-elite">
             <div className="chatbot-header">
               <div className="chatbot-header-info">
                 <div className="chatbot-avatar">
-                  <Bot size={16} />
+                  <Bot size={18} color="var(--primary)" />
                 </div>
                 <div className="chatbot-header-text">
+                  <span className="chatbot-label">AI ASSISTANT</span>
                   <h4>gregbot</h4>
-                  <div className="chatbot-status">
-                    <span className="chatbot-status-dot" />
-                    Online
-                  </div>
                 </div>
               </div>
-              <button
-                className="chatbot-close"
-                onClick={() => setIsOpen(false)}
-                aria-label="Close chat"
-              >
-                <X size={18} />
-              </button>
+              <div className="chatbot-header-actions">
+                <div className={`chatbot-status ${isOffline ? 'status-offline' : ''}`}>
+                  <span className="chatbot-status-dot" />
+                  {isOffline ? 'Offline' : 'Online'}
+                </div>
+                <button className="chatbot-close-elite" onClick={onClose}>
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
-            {/* Messages */}
             <div className="chatbot-messages">
               {messages.map((msg, index) => (
                 <ChatMessage
@@ -162,29 +169,39 @@ const ChatBot = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Form */}
-            <form className="chatbot-input-container" onSubmit={handleSend}>
-              <input
-                type="text"
-                className="chatbot-input"
-                placeholder="Ask me anything..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={isTyping}
-              />
-              <button
-                type="submit"
-                className="chatbot-send"
-                disabled={!input.trim() || isTyping}
-                aria-label="Send message"
-              >
-                <Send size={18} />
-              </button>
-            </form>
+            <div className="chatbot-footer">
+              {!isOffline ? (
+                <form className="chatbot-input-wrapper-elite" onSubmit={handleSend}>
+                  <input
+                    type="text"
+                    className="chatbot-input-elite"
+                    placeholder="Inquire about Gregor's expertise..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    disabled={isTyping}
+                  />
+                  <button
+                    type="submit"
+                    className="chatbot-send-elite"
+                    disabled={!input.trim() || isTyping}
+                  >
+                    <Send size={18} />
+                  </button>
+                </form>
+              ) : (
+                <div className="chatbot-offline-notice">
+                  <span className="notice-icon">⚠</span>
+                  <div className="notice-text">
+                    <strong>Service Interrupted</strong>
+                    <p>gregbot is currently offline.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            </div> { /* chatbot-window-elite */ }
           </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -203,7 +220,7 @@ const ChatMessage = ({ msg, isLast }) => {
           setIsTyping(false);
           clearInterval(interval);
         }
-      }, 15); // Adjust speed here
+      }, 15);
       return () => clearInterval(interval);
     } else {
       setDisplayText(msg.content);
