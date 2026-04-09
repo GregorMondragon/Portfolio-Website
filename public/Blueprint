@@ -1,0 +1,24 @@
+portfolio/
+├── index.html
+├── package.json          ← all deps (Framer Motion, React, Tailwind, etc.)
+├── vite.config.js
+├── tailwind.config.js    ← custom animations: orbs, float, pulseGlow
+├── postcss.config.js
+└── src/
+    ├── index.css         ← custom cursor, noise texture, glass card, glow utils
+    ├── assets/data/
+    │   └── portfolio.js  ← ALL your content in one place (edit here!)
+    ├── hooks/
+    │   ├── useScrollAnimation.js
+    │   ├── useCursor.js         ← smooth lagging ring cursor
+    │   └── useActiveSection.js  ← auto-highlights nav
+    ├── utils/
+    │   └── animations.js        ← Framer Motion variants (fadeUp, stagger, etc.)
+    ├── components/
+    │   ├── ui/
+    │   │   ├── GlowOrbs.jsx     ← animated moving background blobs
+    │   │   ├── CustomCursor.jsx
+    │   │   ├── SectionTitle.jsx
+    │   │   └── Button.jsx
+    │   └── layout/
+    │       └── Navbar.jsx       ← sticky, glass blur, active section aware

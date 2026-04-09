@@ -29,7 +29,9 @@
 .about-bio-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
+  text-align: left;
+  align-items: flex-start;
 }
 
 .about-hello {
@@ -43,10 +45,11 @@
 .about-name {
   font-family: var(--font-display);
   font-size: 2.75rem;
-  font-weight: 600;
-  line-height: 1.2;
+  font-weight: 700;
+  line-height: 1.1;
   color: white;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
 }
 
 .about-description {
@@ -68,29 +71,40 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  z-index: 10;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.about-avatar-glow {
+.about-avatar-premium-glow {
   position: absolute;
   width: 120%;
   height: 120%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.4) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 102, 255, 0.25) 0%, transparent 70%);
   filter: blur(40px);
   z-index: -1;
+  pointer-events: none;
 }
+
 
 .about-avatar-circle {
   width: 20rem;
   height: 20rem;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(255, 255, 255, 0.05);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.about-avatar-container:hover .about-avatar-circle {
+  border-color: rgba(0, 102, 255, 0.6);
+  box-shadow: 0 0 80px rgba(0, 102, 255, 0.3), inset 0 0 60px rgba(0, 102, 255, 0.1);
+  transform: scale(1.02);
 }
 
 .about-avatar-image {
@@ -98,6 +112,12 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.hover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* ── Stats Grid ─────────────────────────────────────────── */

@@ -22,7 +22,7 @@ const InstagramIcon = () => (
 const Navbar = ({ onChatToggle }) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const activeSection = useActiveSection(['home', 'about', 'portfolio', 'contact']);
+  const activeSection = useActiveSection(['home', 'about', 'academic', 'portfolio', 'contact']);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);

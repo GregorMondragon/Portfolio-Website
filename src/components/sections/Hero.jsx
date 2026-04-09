@@ -4,6 +4,7 @@ import { ExternalLink, Mail, ArrowDown } from 'lucide-react';
 import { personal, skills } from '../../assets/data/portfolio';
 import GlowOrbs from '../ui/GlowOrbs';
 import { useFluidParallax, fadeUp, staggerContainer, slideInLeft, slideInRight, zoomIn } from '../../utils/animations';
+import { useTilt } from '../../hooks';
 import '../../styles/Hero.css';
 
 // ── Typewriter ───────────────────────────────────────────────
@@ -83,21 +84,14 @@ const socialLinks = [
 
 // ── 3D Code Panel ──────────────────────────────────────────────
 const CodePanel = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e) => {
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    const x = (clientX / innerWidth - 0.5) * 15; // Max 15 deg tilt
-    const y = (clientY / innerHeight - 0.5) * -15;
-    setMousePos({ x, y });
-  };
+  const { tilt, onMouseMove, onMouseLeave } = useTilt(20);
 
   return (
     <motion.div
       variants={zoomIn} initial="hidden" whileInView="visible" viewport={{ once: false }}
       className="hero-code-panel-wrapper"
-      onMouseMove={handleMouseMove}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
       style={{ perspective: 1200 }}
     >
       {/* Dynamic outer glow */}
@@ -110,14 +104,14 @@ const CodePanel = () => {
       {/* 3D Container */}
       <motion.div
         animate={{
-          rotateX: mousePos.y || [2, -2, 2],
-          rotateY: mousePos.x || [-3, 3, -3],
-          y: mousePos.y ? 0 : [-8, 8, -8]
+          y: [-3, 3, -3]
         }}
         transition={{
-          rotateX: { type: "spring", stiffness: 75, damping: 20 },
-          rotateY: { type: "spring", stiffness: 75, damping: 20 },
           y: { duration: 6, repeat: Infinity, ease: 'easeInOut' }
+        }}
+        style={{
+          rotateX: tilt.x,
+          rotateY: tilt.y,
         }}
         className="hero-code-panel-body"
       >
@@ -190,11 +184,11 @@ const Hero = () => {
   // Slow, premium transition variants
   const slowFadeUp = {
     hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
+    visible: {
+      opacity: 1,
+      y: 0,
       filter: 'blur(0px)',
-      transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] } 
+      transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -211,31 +205,31 @@ const Hero = () => {
 
   const slowSlideInLeft = {
     hidden: { opacity: 0, x: -100, filter: 'blur(10px)' },
-    visible: { 
-      opacity: 1, 
-      x: 0, 
+    visible: {
+      opacity: 1,
+      x: 0,
       filter: 'blur(0px)',
-      transition: { duration: 2.2, ease: [0.16, 1, 0.3, 1] } 
+      transition: { duration: 2.2, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
   const slowSlideInRight = {
     hidden: { opacity: 0, x: 100, filter: 'blur(10px)' },
-    visible: { 
-      opacity: 1, 
-      x: 0, 
+    visible: {
+      opacity: 1,
+      x: 0,
       filter: 'blur(0px)',
-      transition: { duration: 2.2, ease: [0.16, 1, 0.3, 1] } 
+      transition: { duration: 2.2, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
   const slowZoomIn = {
     hidden: { opacity: 0, scale: 0.8, filter: 'blur(15px)' },
-    visible: { 
-      opacity: 1, 
-      scale: 1, 
+    visible: {
+      opacity: 1,
+      scale: 1,
       filter: 'blur(0px)',
-      transition: { duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.4 } 
+      transition: { duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.4 }
     }
   };
 
@@ -248,7 +242,7 @@ const Hero = () => {
         <div className="hero-grid">
 
           {/* ── LEFT COLUMN: Typography & Actions ── */}
-          <motion.div 
+          <motion.div
             className="hero-content"
             variants={slowStagger}
             initial="hidden"

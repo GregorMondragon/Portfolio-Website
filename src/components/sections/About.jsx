@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Code2, Award, Globe, Download, ArrowUpRight } from 'lucide-react';
 import { personal, stats } from '../../assets/data/portfolio';
@@ -49,6 +49,8 @@ const StatCard = ({ stat, index }) => {
 
 const About = () => {
   const sectionRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const avatarTilt = useTilt(10); // Low intensity for a premium feel
   const { y, scale } = useFluidParallax(sectionRef, {
     offset: ["start start", "end start"],
     yRange: [0, 80],
@@ -88,7 +90,7 @@ const About = () => {
               {personal.name.split(' ')[0]} {personal.name.split(' ').slice(1).join(' ')}
             </motion.h2>
             
-            <motion.p className="about-description" variants={fadeUp}>
+            <motion.p className="about-description" variants={slideInLeft}>
               {personal.bio}
             </motion.p>
             
@@ -96,7 +98,7 @@ const About = () => {
               <motion.a 
                 href="#" 
                 className="button button-primary"
-                whileHover={{ y: -3, boxShadow: '0 10px 20px rgba(124, 58, 237, 0.4)' }}
+                whileHover={{ y: -3, boxShadow: '0 10px 20px rgba(59, 130, 246, 0.4)' }}
                 whileTap={{ scale: 0.98 }}
               >
                 <Download size={18} /> Download CV
@@ -121,13 +123,43 @@ const About = () => {
             className="about-avatar-container"
             variants={zoomIn}
             custom={0.3}
+            onMouseMove={avatarTilt.onMouseMove}
+            onMouseLeave={() => {
+              avatarTilt.onMouseLeave();
+              setIsHovered(false);
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            style={{
+              rotateX: avatarTilt.tilt.x,
+              rotateY: avatarTilt.tilt.y,
+              perspective: '1000px',
+            }}
           >
-            <div className="about-avatar-glow" />
+            <motion.div
+              className="about-avatar-premium-glow"
+              animate={isHovered ? {
+                opacity: [0.1, 0.2, 0.1],
+                scale: [1, 1.05, 1],
+              } : { opacity: 0, scale: 0.9 }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
             <div className="about-avatar-circle">
-              <img 
+              {/* Default Image */}
+              <motion.img 
                 src="/Images/GregorDP.jpg" 
                 alt={personal.name} 
                 className="about-avatar-image" 
+                animate={{ opacity: isHovered ? 0 : 1 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              />
+              {/* Hover Image */}
+              <motion.img 
+                src="/Images/HoverDP.png" 
+                alt={personal.name} 
+                className="about-avatar-image hover-image" 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isHovered ? 1 : 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
               />
             </div>
           </motion.div>

@@ -20,14 +20,15 @@
 
 /* Variants */
 .button-primary {
-  background-color: #7c3aed;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
-  box-shadow: 0 10px 15px -3px rgba(76, 29, 149, 0.4);
+  box-shadow: 0 10px 15px -3px rgba(0, 102, 255, 0.3);
 }
 
 .button-primary:hover {
-  background-color: #8b5cf6;
-  box-shadow: 0 10px 15px -3px rgba(91, 33, 182, 0.6);
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+  box-shadow: 0 10px 20px -3px rgba(0, 102, 255, 0.5);
+  transform: translateY(-2px);
 }
 
 .button-outline {
@@ -37,9 +38,9 @@
 }
 
 .button-outline:hover {
-  border-color: rgba(139, 92, 246, 0.5);
+  border-color: var(--accent);
   color: white;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--accent-dim);
 }
 
 /* ── Section Title Component ──────────────────────────────── */
@@ -130,8 +131,8 @@
   transform: translate(-50%, -50%);
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
-  filter: blur(40px);
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 70%);
+  filter: blur(60px);
   z-index: -1;
   pointer-events: none;
 }

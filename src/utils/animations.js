@@ -31,7 +31,7 @@ export const fadeUp = {
   visible: (delay = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 2, ease: [0.16, 1, 0.3, 1], delay },
+    transition: { duration: 2.5, ease: [0.16, 1, 0.3, 1], delay },
   }),
 };
 
@@ -39,7 +39,7 @@ export const fadeIn = {
   hidden: { opacity: 0 },
   visible: (delay = 0) => ({
     opacity: 1,
-    transition: { duration: 2, ease: [0.16, 1, 0.3, 1], delay },
+    transition: { duration: 2.5, ease: [0.16, 1, 0.3, 1], delay },
   }),
 };
 
@@ -48,7 +48,7 @@ export const slideInLeft = {
   visible: (delay = 0) => ({
     opacity: 1,
     x: 0,
-    transition: { duration: 2, ease: [0.16, 1, 0.3, 1], delay },
+    transition: { duration: 3, ease: [0.16, 1, 0.3, 1], delay },
   }),
 };
 
@@ -57,7 +57,7 @@ export const slideInRight = {
   visible: (delay = 0) => ({
     opacity: 1,
     x: 0,
-    transition: { duration: 2, ease: [0.16, 1, 0.3, 1], delay },
+    transition: { duration: 3, ease: [0.16, 1, 0.3, 1], delay },
   }),
 };
 
@@ -66,7 +66,7 @@ export const slideInDown = {
   visible: (delay = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 2, ease: [0.16, 1, 0.3, 1], delay },
+    transition: { duration: 3, ease: [0.16, 1, 0.3, 1], delay },
   }),
 };
 
@@ -75,7 +75,7 @@ export const zoomIn = {
   visible: (delay = 0) => ({
     opacity: 1,
     scale: 1,
-    transition: { duration: 3, type: "spring", bounce: 0.3, delay },
+    transition: { duration: 1.5, type: "spring", bounce: 0.3, delay },
   }),
 };
 
@@ -84,7 +84,7 @@ export const scaleIn = {
   visible: (delay = 0) => ({
     opacity: 1,
     scale: 1,
-    transition: { duration: 2, ease: [0.16, 1, 0.3, 1], delay },
+    transition: { duration: 1, ease: [0.16, 1, 0.3, 1], delay },
   }),
 };
 
@@ -100,6 +100,6 @@ export const staggerItem = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 2, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
   },
 };

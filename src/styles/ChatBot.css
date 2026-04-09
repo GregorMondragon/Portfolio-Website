@@ -183,6 +183,27 @@
   40% { transform: scale(1); }
 }
 
+.typing-indicator-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.retrying-label {
+  font-size: 0.65rem;
+  color: var(--primary-light);
+  font-family: var(--font-mono);
+  font-style: italic;
+  opacity: 0.8;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
 /* Footer / Input */
 .chatbot-footer {
   padding: 1rem 1.25rem;

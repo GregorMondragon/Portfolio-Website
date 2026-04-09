@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 
-export const useTilt = (intensity = 20) => {
+export const useTilt = (intensity = 50) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
   const rotateX = useSpring(useTransform(y, [0.5, -0.5], [-intensity, intensity]), {
-    damping: 25,
+    damping: 50,
     stiffness: 200,
   });
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-intensity, intensity]), {
-    damping: 25,
+    damping: 50,
     stiffness: 200,
   });
 

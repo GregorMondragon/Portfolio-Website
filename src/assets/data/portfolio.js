@@ -7,8 +7,6 @@ export const personal = {
   alias: "DevGreg",
   tagline: "Software Engineer",
   subtitle: "BSIT – Software Engineering",
-  // GEMINI API KEY for ChatBot (Temporary frontend exposure for local development)
-  geminiKey: "AIzaSyAayAxFEIZ-izyd5FKUiaLWxmYEGwvRk_Y",
   bio: "I am Gregor Allen B. Mondragon, a Software Engineer dedicated to architecting high-performance web solutions and premium digital experiences. I specialize in bridging complex technical requirements with elite UI/UX design, offering scalable full-stack development that exceeds expectations and delivers high-impact results.",
   bio2: "As the sole developer and architect behind this platform, I have meticulously engineered every interaction—from the fluid animations and high-end UI design to the underlying software architecture. This project represents the intersection of my technical expertise and my deep-rooted passion for showcasing Aklan's unmatched beauty to the world through a premium, immersive digital experience.",
   email: "gregormondragon16@gmail.com",
@@ -76,7 +74,7 @@ export const projects = [
     title: "Wonders of Aklan",
     description: "A premium tourism platform meticulously designed to showcase the natural beauty and cultural heritage of Aklan through an immersive digital experience.",
     extendedDescription: "This project serves as a digital gateway to Aklan's most breathtaking destinations. It features high-resolution imagery, historical context, and an intuitive travel guide interface, all wrapped in a premium, fluid UI designed for modern explorers.",
-    tags: ["React", "UI/UX", "Tourism"],
+    tags: ["React Framework", "UI/UX", "Tourism"],
     image: "/Images/image.png",
     liveUrl: "https://aklan-tourism.vercel.app/",
     detailUrl: "#",
@@ -88,7 +86,7 @@ export const projects = [
     title: "Banana Leaf Disease Detection",
     description: "An AI-driven agricultural solution leveraged for identifying diseases in banana leaves through image analysis, helping farmers protect their crops.",
     extendedDescription: "Developing a robust machine learning model to assist local farmers. The application uses specialized computer vision algorithms to detect early signs of Sigatoka and Panama disease, providing actionable insights directly to the user's mobile device.",
-    tags: ["AI/ML", "Image Analysis", "In Progress"],
+    tags: ["AI/ML", "Image Recognition", "In Progress"],
     image: "/Images/Musaic.png",
     liveUrl: "#",
     detailUrl: "#",
@@ -122,7 +120,7 @@ export const projects = [
 ];
 
 export const certificates = [
-  { title: "Web Development & Mobile App Design", issuer: "ActiveLearning, Inc. (Philippines)", year: "2026" },
+  { title: "Web Development & Mobile App Design", issuer: "Coursera", year: "2026" },
   { title: "Google UX Design Professional Certificate", issuer: "Google", year: "2026" },
   { title: "Android Development", issuer: "Coursera", year: "2026" },
   { title: "Front-End Developer Professional Certificate", issuer: "Coursera", year: "2026" },

@@ -2,19 +2,19 @@ import { motion } from 'framer-motion';
 import { fadeUp } from '../../utils/animations';
 import '../../styles/UI.css';
 
-const SectionTitle = ({ 
-  eyebrow, 
-  title, 
-  highlight, 
-  subtitle, 
-  center = true, 
+const SectionTitle = ({
+  eyebrow,
+  title,
+  highlight,
+  subtitle,
+  center = true,
   compact = false,
-  withGlow = false 
+  withGlow = false
 }) => {
   return (
     <div className={`section-title-wrapper ${center ? 'center' : ''}`} style={{ position: 'relative' }}>
       {withGlow && <div className="premium-title-glow" />}
-      
+
       {eyebrow && (
         <motion.p
           className="section-eyebrow section-eyebrow-text"
@@ -28,14 +28,14 @@ const SectionTitle = ({
         </motion.p>
       )}
       <div className="section-header-container">
-        <motion.div 
+        <motion.div
           className="section-header-line left"
           initial={{ scaleX: 0, originX: 1 }}
           whileInView={{ scaleX: 1 }}
           viewport={{ once: false, amount: 0.5 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         />
-        
+
         <motion.h2
           className={`section-heading ${compact ? 'compact' : ''}`}
           variants={fadeUp}
@@ -52,11 +52,11 @@ const SectionTitle = ({
           )}
         </motion.h2>
 
-        <motion.div 
+        <motion.div
           className="section-header-line right"
           initial={{ scaleX: 0, originX: 0 }}
           whileInView={{ scaleX: 1 }}
-          viewport={{ once: false, amount: 0.5 }}
+          viewport={{ once: false, amount: 0.6 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         />
       </div>
@@ -66,7 +66,7 @@ const SectionTitle = ({
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.6 }}
           custom={0.4}
         >
           <span className="section-subtitle-content">
