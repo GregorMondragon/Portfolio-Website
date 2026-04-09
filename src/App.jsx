@@ -19,9 +19,15 @@ import CustomCursor from './components/ui/CustomCursor';
 import ScrollProgress from './components/ui/ScrollProgress';
 import ChatBot from './components/ui/ChatBot';
 
+// Hooks
+import useLenis from './hooks/useLenis';
+
 const App = () => {
   const [introComplete, setIntroComplete] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+
+  // Initialize smooth scroll
+  useLenis();
 
   return (
     <>

@@ -7,8 +7,8 @@ export const personal = {
   alias: "DevGreg",
   tagline: "Software Engineer",
   subtitle: "BSIT – Software Engineering",
-  bio: "I am Gregor Allen B. Mondragon, a Software Engineer dedicated to architecting high-performance web solutions and premium digital experiences. I specialize in bridging complex technical requirements with elite UI/UX design, offering scalable full-stack development that exceeds expectations and delivers high-impact results.",
-  bio2: "As the sole developer and architect behind this platform, I have meticulously engineered every interaction—from the fluid animations and high-end UI design to the underlying software architecture. This project represents the intersection of my technical expertise and my deep-rooted passion for showcasing Aklan's unmatched beauty to the world through a premium, immersive digital experience.",
+  bio: "I am a dedicated Front-end Developer and UI/UX Designer focused on building high-performance, visually stunning web experiences. With a blend of technical expertise and creative precision, I transform complex ideas into intuitive digital solutions.",
+  bio2: "As a software engineering student and an aspiring Full-stack Developer, I am committed to the art of creating seamless, professional web applications. My background in UI/UX design allows me to bridge the gap between aesthetics and functionality, ensuring that every project is not only powerful but also user-centric. I specialize in the modern web stack, delivering scalable solutions that meet elite industry standards.",
   email: "gregormondragon16@gmail.com",
   website: "devgreg.dev",
   location: "Aklan, Philippines",
@@ -24,7 +24,7 @@ export const personal = {
 export const stats = [
   { label: "Total Projects", value: "4+", icon: "code", description: "Innovative web solutions crafted" },
   { label: "Certificates", value: "5", icon: "award", description: "Professional skills validated" },
-  { label: "Years of Experience", value: "3+", icon: "globe", description: "Continuous learning journey" },
+  { label: "Years of Experience", value: "1", icon: "globe", description: "Continuous learning journey" },
 ];
 
 export const skills = ["React", "JavaScript", "Framer", "Node.js", "MongoDB", "and many more"];

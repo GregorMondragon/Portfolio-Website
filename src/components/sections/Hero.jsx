@@ -260,7 +260,7 @@ const Hero = () => {
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 style={{ width: '0.5rem', height: '0.5rem', borderRadius: '50%', backgroundColor: '#34d399', boxShadow: '0 0 10px rgba(52,211,153,0.8)' }}
               />
-              <span className="hero-badge-text">Available for projects</span>
+              <span className="hero-badge-text">Open for projects</span>
             </motion.div>
 
             {/* Main Headline */}
@@ -288,7 +288,7 @@ const Hero = () => {
               variants={slowFadeUp}
               className="hero-bio"
             >
-              I am <strong className="text-white-bold">Gregor Allen B. Mondragon</strong>, a Software Engineer dedicated to architecting high-performance web solutions and premium digital experiences. I specialize in bridging complex technical requirements with elite UI/UX design, offering scalable full-stack development that exceeds expectations and delivers high-impact results.
+              I am a dedicated <strong className="text-white-bold">Front-end Developer</strong> and <strong className="text-white-bold">UI/UX Designer</strong> focused on building high-performance, visually stunning web experiences. With a blend of technical expertise and creative precision, I transform complex ideas into intuitive digital solutions.
             </motion.p>
 
             {/* Call to Actions */}

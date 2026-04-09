@@ -91,7 +91,7 @@ const About = () => {
             </motion.h2>
             
             <motion.p className="about-description" variants={slideInLeft}>
-              {personal.bio}
+              {personal.bio2}
             </motion.p>
             
             <motion.div className="about-buttons" variants={zoomIn}>
